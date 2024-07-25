@@ -1,0 +1,42 @@
+#include <stdio.h>
+#include <string.h>
+
+void multiplyMatrices(int mat1[2][2], int mat2[2], int res[2]) {
+    for (int i = 0; i < 2; i++) {
+        res[i] = 0;
+        for (int j = 0; j < 2; j++) {
+            res[i] += mat1[i][j] * mat2[j];
+        }
+        res[i] %= 26;  
+    }
+}
+
+void encrypt(char *message, int key[2][2], char *cipher) {
+    int len = strlen(message);
+    int pair[2];
+    int encryptedPair[2];
+    
+    for (int i = 0; i < len; i += 2) {
+        pair[0] = message[i] - 'a';
+        pair[1] = message[i+1] - 'a';
+        
+        multiplyMatrices(key, pair, encryptedPair);
+        
+        cipher[i] = encryptedPair[0] + 'a';
+        cipher[i+1] = encryptedPair[1] + 'a';
+    }
+    cipher[len] = '\0';  
+}
+
+int main() {
+    char message[] = "meetmeattheusualplaceattenratherthaneightoclockxx";  
+    char cipher[strlen(message) + 1];
+    
+    int key[2][2] = {{9, 4}, {5, 7}};
+    
+    encrypt(message, key, cipher);
+    
+    printf("Encrypted message: %s\n", cipher);
+    
+    return 0;
+}
